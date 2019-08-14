@@ -362,7 +362,7 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
 		
 		$result  = false;
 		
-		$ip_data = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=".$ip));
+		$ip_data = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=".$ip_address));
 		if($ip_data && $ip_data->geoplugin_countryCode != null)
 		{
 			$result = $ip_data->geoplugin_countryCode;
