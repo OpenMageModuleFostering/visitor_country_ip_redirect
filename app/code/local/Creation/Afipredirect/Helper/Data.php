@@ -17,15 +17,33 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
     const XML_PATH_SETTINGS_LOOKUP_SERVICE    		= 'afipredirect/settings/country_lookup_service';
     const XML_PATH_SETTINGS_EXCLUDE_IPS    			= 'afipredirect/settings/exlude_ips';
 	const XML_PATH_SETTINGS_EXCLUDE_SEARCH_ENGINES	= 'afipredirect/settings/exlude_search_engines';
+	const XML_PATH_LOG_REDIRECTS_ENABLED		 	= 'afipredirect/settings/log_redirects';
     const XML_PATH_REDIRECT_SOURCE_COUNTRY  		= 'afipredirect/redirect/source_country';
     const XML_PATH_REDIRECT_DESTINATION_WEBSITE   	= 'afipredirect/redirect/destination_website';
 	const XML_PATH_REDIRECT_ENABLED		 			= 'afipredirect/redirect/redirect_enabled';
+	const XML_PATH_REDIRECT_ONCE_ENABLED		 	= 'afipredirect/redirect/redirect_once';
+	const XML_PATH_REDIRECT_LAND_URL			 	= 'afipredirect/redirect/redirect_land_url';
+
     
 
 
     public function isEnabled()
     {
         return Mage::getStoreConfig( self::XML_PATH_ENABLED );
+    }
+    public function isRedirectOnce()
+    {
+        return Mage::getStoreConfig( self::XML_PATH_REDIRECT_ONCE_ENABLED );
+    }
+	
+    public function isRedirectLandUrl()
+    {
+        return Mage::getStoreConfig( self::XML_PATH_REDIRECT_LAND_URL );
+    }
+	
+    public function isLogRedirects()
+    {
+        return Mage::getStoreConfig( self::XML_PATH_LOG_REDIRECTS_ENABLED );
     }
 	
     public function isRedirectEnabled()
@@ -165,6 +183,12 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
 			return false;
 		}
 	
+		// do we redirect based on the landing url
+		if(!$this->landAndCurrentUrlMatch())
+		{
+			return false;
+		}
+
 		// has the visitor been here before?
 		$country_code = $this->getVisitorsIpCountrySession();
 
@@ -173,7 +197,12 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
 		{
 			$country_code = $this->getCountryCodeByIp($visitors_ip);
 			$this->setVisitorsIpCountrySession($country_code);
+		} elseif($this->isRedirectOnce())
+		{
+			// the user has been redirected, maybe thats enough?
+			return false;
 		}
+	
 		
 		// get config values
 		$source_countries = $this->getSourceCountry();
@@ -188,6 +217,40 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 	}
 
+	public function landAndCurrentUrlMatch()
+	{
+		$landing_url = rtrim($this->isRedirectLandUrl(),'/');
+		if($landing_url == '')
+		{
+			// no landign URL is defined - continue conditions check;
+			return true;
+		}
+		$current_url = rtrim(Mage::helper('core/url')->getCurrentUrl(),'/');
+		
+		$parse = parse_url($landing_url);
+		if(!isset($parse['path']))
+		{
+			$parse['path'] = '';
+		}
+		$landing_url_clean = preg_replace('#^www\.(.+\.)#i', '$1', $parse['host']) . $parse['path'];
+		
+		$parse = parse_url($current_url);
+		if(!isset($parse['path']))
+		{
+			$parse['path'] = '';
+		}
+		$current_url_clean = preg_replace('#^www\.(.+\.)#i', '$1', $parse['host']) . $parse['path'];
+		
+		if($landing_url_clean == $current_url_clean)
+		{
+			return true;
+		} else {
+			return false;
+		}
+	
+	
+	}
+	
 	public function getRedirectResultByIp($ip_address = false)
 	{
 		if($ip_address == false)
@@ -235,19 +298,27 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
 		
 		$lookup_service = $this->getCountryLookupService();
 		
+		$start = microtime(true);
 		switch ($lookup_service) {
 			case 'geoplugin':
-				return $this->geoplugin_visitor_country($ip_address);
+				$result = $this->geoplugin_visitor_country($ip_address);
 				break;
 			case 'hostip':
-				return $this->hostip_visitor_country($ip_address);
+				$result = $this->hostip_visitor_country($ip_address);
 				break;
 			case 'iptolatlng':
-				return $this->iptolatlng_visitor_country($ip_address);
+				$result = $this->iptolatlng_visitor_country($ip_address);
 				break;
 			default:
-			  return $this->iptolatlng_visitor_country($ip_address);
+				$result = $this->iptolatlng_visitor_country($ip_address);
 		}
+		$end = microtime(true);
+		$duration = (string) $end - $start;
+		if($this->isLogRedirects())
+		{
+			Mage::log($lookup_service.' returned country code '.$result.' on IP address '.$this->getVisitorsIp().' in '.$duration.' seconds' ,null,'afipredirect.log');
+		}
+		return $result;
 		
 	}
 	

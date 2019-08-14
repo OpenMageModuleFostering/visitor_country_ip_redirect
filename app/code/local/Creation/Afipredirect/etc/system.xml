@@ -37,6 +37,18 @@
             				<show_in_website>1</show_in_website>
             				<show_in_store>1</show_in_store>
 						</enable>
+						<log_redirects>
+            				<label>Log redirects?</label>
+            				<frontend_type>select</frontend_type>
+            				<source_model>adminhtml/system_config_source_yesno</source_model>
+            				<sort_order>1</sort_order>
+            				<show_in_default>1</show_in_default>
+            				<show_in_website>1</show_in_website>
+            				<show_in_store>1</show_in_store>
+							<comment>
+								<![CDATA[See afipredirect.log in you logs directory to see which users have been redirected.]]>
+							</comment>
+						</log_redirects>
                         <country_lookup_service translate="label comment">
                             <label>Country lookup service</label>
                             <comment>
@@ -127,6 +139,18 @@
             				<show_in_website>1</show_in_website>
             				<show_in_store>1</show_in_store>
 						</redirect_enabled>
+						<redirect_once>
+            				<label>Redirect only once?</label>
+            				<frontend_type>select</frontend_type>
+            				<source_model>adminhtml/system_config_source_yesno</source_model>
+            				<sort_order>11</sort_order>
+            				<show_in_default>1</show_in_default>
+            				<show_in_website>1</show_in_website>
+            				<show_in_store>1</show_in_store>
+							<comment>
+								<![CDATA[If set to YES, visitor who comes for the first time are redirected. Next time they come, no redirect is performed. If set to NO, users are redirect all the time. You might want to set this value to YES, if you want the visitors to be redirected to specific store language (f.e. www.domain.com/nl), and allow them to chose other language and return to home page etc.]]>
+							</comment>
+						</redirect_once>
 
 						<source_country>
             				<label>Visitor country</label>
@@ -140,6 +164,17 @@
             				<show_in_website>1</show_in_website>
             				<show_in_store>1</show_in_store>
 						</source_country>
+						<redirect_land_url>
+            				<label>Land URL</label>
+							<comment>
+								<![CDATA[..and he landed on this URL (example http://www.domain.com/category-page, if left blank, redirect will be performed on all website urls)...]]>
+							</comment>
+            				<frontend_type>text</frontend_type>
+            				<sort_order>45</sort_order>
+            				<show_in_default>1</show_in_default>
+            				<show_in_website>1</show_in_website>
+            				<show_in_store>1</show_in_store>
+						</redirect_land_url>
 						<destination_website>
             				<label>Redirect to URL</label>
 							<comment>

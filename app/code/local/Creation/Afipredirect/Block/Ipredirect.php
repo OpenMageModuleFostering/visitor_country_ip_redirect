@@ -32,7 +32,11 @@ class Creation_Afipredirect_Block_Ipredirect extends Mage_Core_Block_Template
 	{
 		$helper = $this->helper('afipredirect');
 		$destination_url = $helper->getDestinationWebsite();
-		
+
+		if($helper->isLogRedirects())
+		{
+			Mage::log($helper->getVisitorsIp().' ('.$helper->getVisitorsIpCountrySession().') redirected from '.Mage::helper('core/url')->getCurrentUrl().' to '.$helper->getDestinationWebsite(),null,'afipredirect.log');
+		}
 
 		if($helper->isJsRedirect())
 		{
