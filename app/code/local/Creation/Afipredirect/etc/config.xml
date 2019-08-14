@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<config>
+	<default>
+		<afipredirect>
+			<settings>
+				<enable>0</enable>
+				<is_test_mode>0</is_test_mode>
+				<jsredirect>0</jsredirect>
+				<exlude_search_engines>1</exlude_search_engines>
+				<country_lookup_service>iptolatlng</country_lookup_service>
+			</settings>
+		</afipredirect>
+	</default>	
+
+    <modules>
+        <Creation_Afipredirect>
+            <version>0.0.3</version>
+        </Creation_Afipredirect>
+    </modules>
+    <global>
+        <blocks>
+            <afipredirect>
+                <class>Creation_Afipredirect_Block</class>
+            </afipredirect>
+        </blocks>
+		<helpers>
+			<afipredirect>
+				<class>Creation_Afipredirect_Helper</class>
+			</afipredirect>
+		</helpers>
+		<models>
+			<afipredirect>
+				<class>Creation_Afipredirect_Model</class>
+			</afipredirect>
+			<afipredirect_adminhtml>
+				<class>Creation_Afipredirect_Adminhtml_Model</class>
+			</afipredirect_adminhtml>
+		</models>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <afipredirect module="Creation_Afipredirect">
+                    <file>afipredirect.xml</file>
+                </afipredirect>
+            </updates>
+        </layout>
+    </frontend>
+</config>

@@ -1,0 +1,55 @@
+<?php 
+/**
+ * @category    Creation
+ * @package     Creation_Afipredirect
+ * @author 		Liudas Stanevicius <liudas@creation.lt>
+ * @copyright 	Elsoft, UAB (www.creation.lt) <info@creation.lt>
+ */
+?>
+
+
+<?php 
+	$helper =  Mage::helper('afipredirect'); 
+?>
+
+<?php if($this->canShowTestPanel()): ?>
+	<div class="afipredirect_testmode">
+		<h4><?php echo __('Visitor Country IP redirect testing panel'); ?></h4>
+		<?php echo __('Tested IP address'); ?>: <strong><?php echo $helper->getIpToTest(); ?></strong><br />
+		(<i><?php echo __('note, that your IP address is %s', $helper->getVisitorsIp()); ?></i>)<br />
+		<?php echo __('Lookup service'); ?>: <strong><?php echo $helper->getCountryLookupService(); ?></strong><br />
+		<?php echo __('Country by IP'); ?>: <strong><?php echo $helper->getIpTestResults($helper->getIpToTest()); ?></strong><br />
+		<?php echo __('Is search engine bot?'); ?>: 
+			
+			<?php if($helper->isSearchEngineBot()): ?>
+				<strong><?php echo __('yes'); ?></strong>
+			<?php else: ?>
+				<strong><?php echo __('no'); ?></strong>
+			<?php endif; ?>
+			<br />
+		<?php echo __('Would user be redirected to %s?', $helper->getDestinationWebsite()); ?>: <strong><?php if($helper->getRedirectResultByIp($helper->getIpToTest())): ?><?php echo __('yes'); ?><?php else: ?><?php echo __('no'); ?><?php endif; ?></strong>
+	</div>
+	
+	
+	<style type="text/css">
+		div.afipredirect_testmode { 
+			font-family: Arial;
+			font-size: 12px;
+			text-align: left; 
+			margin: 0px auto; 
+			padding: 10px; 
+			position: fixed;
+			width: 300px;
+			background-color: red;
+			color: white;
+			bottom: 0px;
+			}
+		div.afipredirect_testmode h4{
+			color: white;
+			fonct-size: 14px;
+			padding: 0px 0px 10px 0px;
+			margin: 0px;
+			}
+	</style>
+	
+<?php endif; ?>

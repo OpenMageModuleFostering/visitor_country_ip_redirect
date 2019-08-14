@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+     <modules>
+        <Creation_Afipredirect>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Creation_Afipredirect>
+     </modules>
+</config>
