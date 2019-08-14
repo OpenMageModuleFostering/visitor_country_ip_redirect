@@ -27,14 +27,28 @@
 				<strong><?php echo __('no'); ?></strong>
 			<?php endif; ?>
 			<br />
-		<?php echo __('Would user be redirected to %s?', $helper->getDestinationWebsite()); ?>: <strong><?php if($helper->getRedirectResultByIp($helper->getIpToTest())): ?><?php echo __('yes'); ?><?php else: ?><?php echo __('no'); ?><?php endif; ?></strong>
+		<hr />
+		<?php for ($i = 1; $i <= 5; $i++): ?>
+			<?php if($helper->isRedirectEnabled($i)): ?>
+			<div><strong>Redirect #<?php echo $i; ?></strong></div>
+			<?php echo __('Redirected to %s?', $helper->getDestinationWebsite($i)); ?>: 
+			<strong>
+				<?php if($helper->getRedirectResultByIp($helper->getIpToTest(),$i)): ?>
+					<?php echo __('yes'); ?>
+				<?php else: ?>
+					<?php echo __('no'); ?>
+				<?php endif; ?>
+			</strong>
+			<?php endif; ?>
+		<?php endfor; ?>
+
 	</div>
 	
 	
 	<style type="text/css">
 		div.afipredirect_testmode { 
 			font-family: Arial;
-			font-size: 12px;
+			font-size: 11px;
 			text-align: left; 
 			margin: 0px auto; 
 			padding: 10px; 

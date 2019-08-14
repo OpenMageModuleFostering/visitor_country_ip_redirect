@@ -18,24 +18,69 @@ class Creation_Afipredirect_Block_Ipredirect extends Mage_Core_Block_Template
 	{
 		$helper = $this->helper('afipredirect');
 		
-		if($helper->isEnabled() && $helper->isRedirectEnabled() && !$helper->isTestMode())
+		if($helper->isEnabled() && !$helper->isTestMode())
+		{
+		
+			$i=1;
+			while($i<=5) {
+				if($helper->isRedirectEnabled($i))
+				{
+					if($helper->userNeedsToBeRedirected($i))
+					{
+						$this->doTheRedirect($i);
+					}
+				}
+				$i++;
+			}
+			
+			/*if($helper->isRedirectEnabled($number = 1))
+			{
+				$this->doTheRedirect();
+			}
+			if($helper->isRedirectEnabled($number = 2))
+			{
+				$this->doTheRedirect();
+			}
+			if($helper->isRedirectEnabled($number = 3))
+			{
+				$this->doTheRedirect();
+			}
+			if($helper->isRedirectEnabled($number = 4))
+			{
+				$this->doTheRedirect();
+			}
+			if($helper->isRedirectEnabled($number = 5))
+			{
+				$this->doTheRedirect();
+			}*/
+			
+			
+			
+			/*if($helper->userNeedsToBeRedirected())
+			{
+				$this->doTheRedirect();
+			}*/
+			
+		}		
+		
+		/*if($helper->isEnabled() && $helper->isRedirectEnabled() && !$helper->isTestMode())
 		{ 
 			if($helper->userNeedsToBeRedirected())
 			{
 				$this->doTheRedirect();
 			}
 			
-		}
+		}*/
 	}
 	
-	private function doTheRedirect()
+	private function doTheRedirect($number)
 	{
 		$helper = $this->helper('afipredirect');
-		$destination_url = $helper->getDestinationWebsite();
+		$destination_url = $helper->getDestinationWebsite($number);
 
 		if($helper->isLogRedirects())
 		{
-			Mage::log($helper->getVisitorsIp().' ('.$helper->getVisitorsIpCountrySession().') redirected from '.Mage::helper('core/url')->getCurrentUrl().' to '.$helper->getDestinationWebsite(),null,'afipredirect.log');
+			Mage::log('Redirect #'.$number.' '.$helper->getVisitorsIp().' ('.$helper->getVisitorsIpCountrySession().') redirected from '.Mage::helper('core/url')->getCurrentUrl().' to '.$helper->getDestinationWebsite(),null,'afipredirect.log');
 		}
 
 		if($helper->isJsRedirect())

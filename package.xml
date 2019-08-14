@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
     <name>visitor_country_ip_redirect</name>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <stability>stable</stability>
     <license uri="http://opensource.org/licenses/osl-3.0.php">Open Software License (OSL 3.0)</license>
     <channel>community</channel>
@@ -17,17 +17,19 @@ Visitor's country code is obtained from visitor's IP address by getting data fro
 Extension has some configuration options:&#xD;
 * test mode;&#xD;
 * redirect type (PHP/JavaScript);&#xD;
+* multiple redirect rules;&#xD;
 * exclude specific IP addresses from redirect;&#xD;
 * exclude search engine bots from redirect;&#xD;
 * etc.&#xD;
 &#xD;
 Extension is tested on versions 1.7+, but it could work with older versions as well.</description>
-    <notes>0.0.4 - new features: logging, landing URL, redirect once etc.&#xD;
+    <notes>0.0.5 - addded 4 more redirect rules&#xD;
+0.0.4 - new features: logging, landing URL, redirect once etc.&#xD;
 0.0.3 - Initial release.</notes>
     <authors><author><name>Liudas Stanevicius</name><user>liudass</user><email>liudas@creation.lt</email></author></authors>
-    <date>2014-04-12</date>
-    <time>16:35:45</time>
-    <contents><target name="magelocal"><dir name="Creation"><dir name="Afipredirect"><dir name="Adminhtml"><dir name="Model"><dir name="System"><dir name="Config"><dir name="Source"><file name="Countrylookupproviders.php" hash="d05bc8e6a90c652875784202d2f7f00c"/></dir></dir></dir></dir></dir><dir name="Block"><file name="Ipredirect.php" hash="32c1325cea2b1393fda3ce5f9cab7f9d"/></dir><dir name="Helper"><file name="Data.php" hash="2566f12c3e0e9949b181fc59af0d466c"/></dir><dir name="etc"><file name="adminhtml.xml" hash="2d31a75f87743daa996f76d81f0924ac"/><file name="config.xml" hash="1c84913a7e759cfe57e322b9c138520a"/><file name="system.xml" hash="0bc19633521495503eddd2315f507ecf"/></dir></dir></dir></target><target name="magedesign"><dir name="frontend"><dir name="default"><dir name="default"><dir name="template"><dir name="afipredirect"><file name="ipredirect.phtml" hash="09604fcc521fd5346800829ea4dca3fb"/></dir></dir><dir name="layout"><file name="afipredirect.xml" hash="4f48f9deb8bffcdefaee4b1b07e6a842"/></dir></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Creation_Afipredirect.xml" hash="3c92fb37c92042cf2c759f0180596b3d"/></dir></target></contents>
+    <date>2014-09-25</date>
+    <time>18:25:48</time>
+    <contents><target name="magelocal"><dir name="Creation"><dir name="Afipredirect"><dir name="Adminhtml"><dir name="Model"><dir name="System"><dir name="Config"><dir name="Source"><file name="Countrylookupproviders.php" hash="d05bc8e6a90c652875784202d2f7f00c"/></dir></dir></dir></dir></dir><dir name="Block"><file name="Ipredirect.php" hash="8ed0a59cfdd3b6380be57b33a834a26e"/></dir><dir name="Helper"><file name="Data.php" hash="bc0724de1ce00b813ecf64638041d47b"/></dir><dir name="etc"><file name="adminhtml.xml" hash="2d31a75f87743daa996f76d81f0924ac"/><file name="config.xml" hash="bd84b2c6b702e0f5b65cd48c54a98cfe"/><file name="system.xml" hash="7905df675f9a1311b8de264253d946d6"/></dir></dir></dir></target><target name="magedesign"><dir name="frontend"><dir name="default"><dir name="default"><dir name="template"><dir name="afipredirect"><file name="ipredirect.phtml" hash="84de622a8ef1f5ac81d6a9f78b914845"/></dir></dir><dir name="layout"><file name="afipredirect.xml" hash="4f48f9deb8bffcdefaee4b1b07e6a842"/></dir></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Creation_Afipredirect.xml" hash="3c92fb37c92042cf2c759f0180596b3d"/></dir></target></contents>
     <compatible/>
     <dependencies><required><php><min>5.2.0</min><max>5.9.0</max></php></required></dependencies>
 </package>

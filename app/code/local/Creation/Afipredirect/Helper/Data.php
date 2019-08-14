@@ -18,27 +18,43 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
     const XML_PATH_SETTINGS_EXCLUDE_IPS    			= 'afipredirect/settings/exlude_ips';
 	const XML_PATH_SETTINGS_EXCLUDE_SEARCH_ENGINES	= 'afipredirect/settings/exlude_search_engines';
 	const XML_PATH_LOG_REDIRECTS_ENABLED		 	= 'afipredirect/settings/log_redirects';
-    const XML_PATH_REDIRECT_SOURCE_COUNTRY  		= 'afipredirect/redirect/source_country';
-    const XML_PATH_REDIRECT_DESTINATION_WEBSITE   	= 'afipredirect/redirect/destination_website';
-	const XML_PATH_REDIRECT_ENABLED		 			= 'afipredirect/redirect/redirect_enabled';
-	const XML_PATH_REDIRECT_ONCE_ENABLED		 	= 'afipredirect/redirect/redirect_once';
-	const XML_PATH_REDIRECT_LAND_URL			 	= 'afipredirect/redirect/redirect_land_url';
+	
+    const XML_PATH_REDIRECT_SOURCE_COUNTRY  		= 'afipredirect/redirect{{number}}/source_country';
+    const XML_PATH_REDIRECT_DESTINATION_WEBSITE   	= 'afipredirect/redirect{{number}}/destination_website';
+	const XML_PATH_REDIRECT_ENABLED		 			= 'afipredirect/redirect{{number}}/redirect_enabled';
+	const XML_PATH_REDIRECT_ONCE_ENABLED		 	= 'afipredirect/redirect{{number}}/redirect_once';
+	const XML_PATH_REDIRECT_LAND_URL			 	= 'afipredirect/redirect{{number}}/redirect_land_url';
+	
+	const NUMBER_CONST			 					= '{{number}}';
 
     
 
+	public function getRedirectSettings($path, $number)
+	{
+		if(($number == false) || ($number == 1))
+		{
+			// since 1st redirect does not have numbering in the path..
+			$number = '';
+		}
+		
+		$result = str_replace(self::NUMBER_CONST,$number,$path);
+		return $result;
+	}
 
     public function isEnabled()
     {
-        return Mage::getStoreConfig( self::XML_PATH_ENABLED );
+		return Mage::getStoreConfig( self::XML_PATH_ENABLED );
     }
-    public function isRedirectOnce()
+    public function isRedirectOnce($redirect_no = false)
     {
-        return Mage::getStoreConfig( self::XML_PATH_REDIRECT_ONCE_ENABLED );
+		$path = $this->getRedirectSettings(self::XML_PATH_REDIRECT_ONCE_ENABLED,$redirect_no); 
+        return Mage::getStoreConfig( $path );
     }
 	
-    public function isRedirectLandUrl()
+    public function isRedirectLandUrl($redirect_no = false)
     {
-        return Mage::getStoreConfig( self::XML_PATH_REDIRECT_LAND_URL );
+		$path = $this->getRedirectSettings(self::XML_PATH_REDIRECT_LAND_URL,$redirect_no); 
+        return Mage::getStoreConfig( $path );
     }
 	
     public function isLogRedirects()
@@ -46,9 +62,10 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfig( self::XML_PATH_LOG_REDIRECTS_ENABLED );
     }
 	
-    public function isRedirectEnabled()
+    public function isRedirectEnabled($redirect_no = false)
     {
-        return Mage::getStoreConfig( self::XML_PATH_REDIRECT_ENABLED );
+		$path = $this->getRedirectSettings(self::XML_PATH_REDIRECT_ENABLED,$redirect_no); 
+        return Mage::getStoreConfig( $path );
     }	
 	
     public function isTestMode()
@@ -70,14 +87,18 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfig( self::XML_PATH_SETTINGS_LOOKUP_SERVICE );
     }
 	
-    public function getSourceCountry()
+    public function getSourceCountry($redirect_no = false)
     {
-        return Mage::getStoreConfig( self::XML_PATH_REDIRECT_SOURCE_COUNTRY );
+		$path = $this->getRedirectSettings(self::XML_PATH_REDIRECT_SOURCE_COUNTRY,$redirect_no); 
+        return Mage::getStoreConfig( $path );
+        //return Mage::getStoreConfig( self::XML_PATH_REDIRECT_SOURCE_COUNTRY );
     }
 	
-    public function getDestinationWebsite()
+    public function getDestinationWebsite($redirect_no = false)
     {
-        return Mage::getStoreConfig( self::XML_PATH_REDIRECT_DESTINATION_WEBSITE );
+        $path = $this->getRedirectSettings(self::XML_PATH_REDIRECT_DESTINATION_WEBSITE,$redirect_no); 
+        return Mage::getStoreConfig( $path );
+		//return Mage::getStoreConfig( self::XML_PATH_REDIRECT_DESTINATION_WEBSITE );
     }
     public function isJsRedirect()
     {
@@ -168,7 +189,7 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 	
 	
-	public function userNeedsToBeRedirected()
+	public function userNeedsToBeRedirected($number)
 	{
 		$visitors_ip = $this->getVisitorsIp();
 		// is this visitor in the IP exlude list?
@@ -184,7 +205,7 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 	
 		// do we redirect based on the landing url
-		if(!$this->landAndCurrentUrlMatch())
+		if(!$this->landAndCurrentUrlMatch($number))
 		{
 			return false;
 		}
@@ -197,7 +218,7 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
 		{
 			$country_code = $this->getCountryCodeByIp($visitors_ip);
 			$this->setVisitorsIpCountrySession($country_code);
-		} elseif($this->isRedirectOnce())
+		} elseif($this->isRedirectOnce($number))
 		{
 			// the user has been redirected, maybe thats enough?
 			return false;
@@ -205,7 +226,7 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
 	
 		
 		// get config values
-		$source_countries = $this->getSourceCountry();
+		$source_countries = $this->getSourceCountry($number);
 		$source_countries = explode(',',$source_countries);
 		
 		// match?
@@ -217,9 +238,9 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 	}
 
-	public function landAndCurrentUrlMatch()
+	public function landAndCurrentUrlMatch($number = false)
 	{
-		$landing_url = rtrim($this->isRedirectLandUrl(),'/');
+		$landing_url = rtrim($this->isRedirectLandUrl($number),'/');
 		if($landing_url == '')
 		{
 			// no landign URL is defined - continue conditions check;
@@ -251,7 +272,7 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
 	
 	}
 	
-	public function getRedirectResultByIp($ip_address = false)
+	public function getRedirectResultByIp($ip_address = false, $number = false)
 	{
 		if($ip_address == false)
 		{
@@ -259,13 +280,20 @@ class Creation_Afipredirect_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 	
 		$country_code = $this->getCountryCodeByIp($ip_address);
-		$source_countries = $this->getSourceCountry();
+		$source_countries = $this->getSourceCountry($number);
 		
 		$source_countries = explode(',',$source_countries);
 		
+		
 		if(in_array($country_code,$source_countries))
 		{
-			return true;
+			// do we redirect based on the landing url
+			if(!$this->landAndCurrentUrlMatch($number))
+			{
+				return false;
+			} else {
+				return true;
+			}
 		} else {
 			return false;
 		}
