@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/visitor_country_ip_redirect",
+    "name": "OpenMageModuleFostering\/visitor_country_ip_redirect",
     "type": "magento-module",
     "license": "Open-Software-License-(OSL-3.0)",
     "homepage": "",
     "description": "Redirect your store visitors to an anoteher URL based on their source country (IP address).",
     "authors": [
-    {
-        "name": "Liudas Stanevicius",
-        "email": "liudas@creation.lt"
-    }
-],
+        {
+            "name": "Liudas Stanevicius",
+            "email": "liudas@creation.lt"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
